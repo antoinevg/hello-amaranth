@@ -1,0 +1,11 @@
+.python-version
+
+datasheets/
+
+examples/build/
+examples/*.v
+examples/*.vcd
+
+toolchain/amaranth-boards.git/
+toolchain/oss-cad-suite/
+toolchain/*.tgz
