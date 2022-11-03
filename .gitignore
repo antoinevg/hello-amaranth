@@ -6,6 +6,11 @@ examples/build/
 examples/*.v
 examples/*.vcd
 
-toolchain/amaranth-boards.git/
 toolchain/oss-cad-suite/
 toolchain/*.tgz
+toolchain/*.git
+
+target/
+**/*.rs.bk
+Cargo.lock
+hello-femtorv/*.bin

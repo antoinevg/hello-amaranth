@@ -46,13 +46,15 @@ Grab the latest toolchain from:
 
     https://github.com/YosysHQ/oss-cad-suite-build/releases/latest
 
-Copy it into the `toolchain/` directory and:n
+Copy it into the `toolchain/` directory and:
 
     cd toolchain/
     tar xzf oss-cad-suite-darwin-arm64-20221031.tgz
+
+    # Mollify gatekeeper
     oss-cad-suite/activate
 
-Activate with:
+Enable environment with:
 
     source toolchain/oss-cad-suite/environment
 

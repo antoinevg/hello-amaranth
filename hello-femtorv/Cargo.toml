@@ -1,0 +1,20 @@
+[package]
+name = "hello-femtorv"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+panic-halt = "=0.2.0"
+riscv-rt = "0.5.0"
+
+[patch.crates-io]
+riscv-rt = { git = "https://github.com/m-labs/riscv-rt" }
+
+[profile.release]
+opt-level = 0
+debug-assertions = true
+overflow-checks = true
+codegen-units = 1
+incremental = false
+debug = true
+lto = true
