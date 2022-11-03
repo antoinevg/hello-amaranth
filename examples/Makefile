@@ -3,19 +3,19 @@ SHELL := /bin/zsh
 ENVIRONMENT := source ../toolchain/oss-cad-suite/environment
 PYTHON := python
 
-blinky_icestick: blinky_icestick.py
+blinky: blinky.py
 	$(ENVIRONMENT) && $(PYTHON) $<
 
-breathe_icestick: breathe_icestick.py
+breathe: breathe.py
 	$(ENVIRONMENT) && $(PYTHON) $<
 
-pwm: pwm.py
-	$(PYTHON) $< generate -t v > $@.v
+pmod: pmod.py
+	$(ENVIRONMENT) && $(PYTHON) $< generate -t v > $@.v
 
 up_counter: up_counter.py
 	$(PYTHON) $<
 
-test_icestick:
+test:
 	$(ENVIRONMENT) && $(PYTHON) -m amaranth_boards.icestick
 
 clean:
