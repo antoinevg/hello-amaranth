@@ -12,8 +12,14 @@
 
 ### Python Environment
 
+    # x86_64/rosetta
     pyenv install pypy3.9-7.3.9
     pyenv virtualenv pypy3.9-7.3.9 hello-amaranth
+    pyenv local hello-amaranth
+
+    # arm64
+    pyenv install 3.10.7
+    pyenv virtualenv 3.10.7 hello-amaranth
     pyenv local hello-amaranth
 
 ### Amaranth
@@ -21,8 +27,6 @@
     pip install --upgrade 'amaranth[builtin-yosys]'
 
 ### Amaranth Board Definitions
-
-    # nope pip install --upgrade amaranth_boards
 
     cd toolchain/
     git clone https://github.com/amaranth-lang/amaranth-boards.git

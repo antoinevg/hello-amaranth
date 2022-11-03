@@ -1,15 +1,24 @@
 SHELL := /bin/zsh
 
-up_counter: up_counter.py
-	python up_counter.py
+ENVIRONMENT := source ../toolchain/oss-cad-suite/environment
+PYTHON := python
 
 blinky_icestick: blinky_icestick.py
-	source ../toolchain/oss-cad-suite/environment && \
-	python blinky_icestick.py
+	$(ENVIRONMENT) && $(PYTHON) $<
+
+breathe_icestick: breathe_icestick.py
+	$(ENVIRONMENT) && $(PYTHON) $<
+
+pwm: pwm.py
+	$(PYTHON) $< generate -t v > $@.v
+
+up_counter: up_counter.py
+	$(PYTHON) $<
 
 test_icestick:
-	source ../toolchain/oss-cad-suite/environment && \
-	python -m amaranth_boards.icestick
+	$(ENVIRONMENT) && $(PYTHON) -m amaranth_boards.icestick
 
 clean:
-	rm *.v *.vcd
+	-rm -rf build/
+	-rm *.v
+	-rm	*.vcd
