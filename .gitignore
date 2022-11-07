@@ -6,6 +6,10 @@ examples/build/
 examples/*.v
 examples/*.vcd
 
+hello-minerva/build/
+hello-ulx3s/build/
+
+toolchain/litex/
 toolchain/oss-cad-suite/
 toolchain/*.tgz
 toolchain/*.git
