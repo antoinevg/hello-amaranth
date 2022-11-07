@@ -2,10 +2,9 @@
 
 datasheets/
 
-examples/build/
-examples/*.v
-examples/*.vcd
-
+hello-icestick/build/
+hello-icestick/*.v
+hello-icestick/*.vcd
 hello-minerva/build/
 hello-ulx3s/build/
 
