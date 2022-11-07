@@ -1,0 +1,43 @@
+[package]
+name = "minerva-hal"
+version = "0.0.1"
+authors = ["Antoine van Gelder <antoine@flowdsp.io>"]
+edition = "2021"
+license = "MIT"
+description = "A embedded HAL crate for the litex generated minerva SoC core"
+repository = "https://github.com/antoinevg/hello-amaranth"
+
+[lib]
+test = false
+bench = false
+
+[features]
+default = ["gpio"]
+gpio = ["embedded-hal/unproven"]
+
+[dependencies]
+nb = "1.0"
+embedded-hal = { version = "0.2" }
+
+[dev-dependencies]
+panic-halt = "0.2.0"
+minerva-pac = { path = "../minerva-pac", features = ["rt"]}
+riscv = "=0.9.0"
+riscv-rt = { version = "=0.10.0" }
+
+[profile.release]
+opt-level = "s"
+debug-assertions = false
+overflow-checks = false
+codegen-units = 1
+incremental = false
+debug = true
+lto = true
+
+[[example]]
+name = "blinky"
+required-features = ["gpio", "minerva-pac/rt"]
+
+[[example]]
+name = "counter"
+required-features = ["gpio", "minerva-pac/rt"]
