@@ -15,6 +15,9 @@ YOSYS := ../toolchain/oss-cad-suite/
 
 ENVIRONMENT := source $(YOSYS)/environment
 
+help:
+	$(ENVIRONMENT) && python $(LITEX_BOARDS)/targets/$(BOARD).py --help
+
 synth:
 	$(ENVIRONMENT) && python $(LITEX_BOARDS)/targets/$(BOARD).py \
 	  --cpu-type minerva \
@@ -23,6 +26,8 @@ synth:
 	  --revision $(REVISION) \
 	  --sdram-module $(SDRAM) \
 	  --csr-svd minerva-pac/svd/minerva.svd \
+	  --output-dir build/radiona_ulx3s/ \
+	  --with-oled \
 	  --build
 
 svd:

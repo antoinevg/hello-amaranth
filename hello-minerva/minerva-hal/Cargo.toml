@@ -25,6 +25,14 @@ minerva-pac = { path = "../minerva-pac", features = ["rt"]}
 riscv = "=0.9.0"
 riscv-rt = { version = "=0.10.0" }
 
+# for oled example
+embedded-graphics = "0.7.1"
+ssd1306 = "0.7.0"
+ssd1331 = "0.3"
+display-interface = "0.4"
+display-interface-spi = "0.4"
+nb = "1.0.0"
+
 [profile.release]
 opt-level = "s"
 debug-assertions = false

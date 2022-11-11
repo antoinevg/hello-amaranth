@@ -125,6 +125,62 @@ impl core::fmt::Debug for LEDS {
 }
 #[doc = "LEDS"]
 pub mod leds;
+#[doc = "OLED_CTL"]
+pub struct OLED_CTL {
+    _marker: PhantomData<*const ()>,
+}
+unsafe impl Send for OLED_CTL {}
+impl OLED_CTL {
+    #[doc = r"Pointer to the register block"]
+    pub const PTR: *const oled_ctl::RegisterBlock = 0x8200_1800 as *const _;
+    #[doc = r"Return the pointer to the register block"]
+    #[inline(always)]
+    pub const fn ptr() -> *const oled_ctl::RegisterBlock {
+        Self::PTR
+    }
+}
+impl Deref for OLED_CTL {
+    type Target = oled_ctl::RegisterBlock;
+    #[inline(always)]
+    fn deref(&self) -> &Self::Target {
+        unsafe { &*Self::PTR }
+    }
+}
+impl core::fmt::Debug for OLED_CTL {
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        f.debug_struct("OLED_CTL").finish()
+    }
+}
+#[doc = "OLED_CTL"]
+pub mod oled_ctl;
+#[doc = "OLED_SPI"]
+pub struct OLED_SPI {
+    _marker: PhantomData<*const ()>,
+}
+unsafe impl Send for OLED_SPI {}
+impl OLED_SPI {
+    #[doc = r"Pointer to the register block"]
+    pub const PTR: *const oled_spi::RegisterBlock = 0x8200_2000 as *const _;
+    #[doc = r"Return the pointer to the register block"]
+    #[inline(always)]
+    pub const fn ptr() -> *const oled_spi::RegisterBlock {
+        Self::PTR
+    }
+}
+impl Deref for OLED_SPI {
+    type Target = oled_spi::RegisterBlock;
+    #[inline(always)]
+    fn deref(&self) -> &Self::Target {
+        unsafe { &*Self::PTR }
+    }
+}
+impl core::fmt::Debug for OLED_SPI {
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        f.debug_struct("OLED_SPI").finish()
+    }
+}
+#[doc = "OLED_SPI"]
+pub mod oled_spi;
 #[doc = "SDRAM"]
 pub struct SDRAM {
     _marker: PhantomData<*const ()>,
@@ -132,7 +188,7 @@ pub struct SDRAM {
 unsafe impl Send for SDRAM {}
 impl SDRAM {
     #[doc = r"Pointer to the register block"]
-    pub const PTR: *const sdram::RegisterBlock = 0x8200_1800 as *const _;
+    pub const PTR: *const sdram::RegisterBlock = 0x8200_2800 as *const _;
     #[doc = r"Return the pointer to the register block"]
     #[inline(always)]
     pub const fn ptr() -> *const sdram::RegisterBlock {
@@ -160,7 +216,7 @@ pub struct TIMER0 {
 unsafe impl Send for TIMER0 {}
 impl TIMER0 {
     #[doc = r"Pointer to the register block"]
-    pub const PTR: *const timer0::RegisterBlock = 0x8200_2000 as *const _;
+    pub const PTR: *const timer0::RegisterBlock = 0x8200_3000 as *const _;
     #[doc = r"Return the pointer to the register block"]
     #[inline(always)]
     pub const fn ptr() -> *const timer0::RegisterBlock {
@@ -188,7 +244,7 @@ pub struct UART {
 unsafe impl Send for UART {}
 impl UART {
     #[doc = r"Pointer to the register block"]
-    pub const PTR: *const uart::RegisterBlock = 0x8200_2800 as *const _;
+    pub const PTR: *const uart::RegisterBlock = 0x8200_3800 as *const _;
     #[doc = r"Return the pointer to the register block"]
     #[inline(always)]
     pub const fn ptr() -> *const uart::RegisterBlock {
@@ -220,6 +276,10 @@ pub struct Peripherals {
     pub IDENTIFIER_MEM: IDENTIFIER_MEM,
     #[doc = "LEDS"]
     pub LEDS: LEDS,
+    #[doc = "OLED_CTL"]
+    pub OLED_CTL: OLED_CTL,
+    #[doc = "OLED_SPI"]
+    pub OLED_SPI: OLED_SPI,
     #[doc = "SDRAM"]
     pub SDRAM: SDRAM,
     #[doc = "TIMER0"]
@@ -255,6 +315,12 @@ impl Peripherals {
                 _marker: PhantomData,
             },
             LEDS: LEDS {
+                _marker: PhantomData,
+            },
+            OLED_CTL: OLED_CTL {
+                _marker: PhantomData,
+            },
+            OLED_SPI: OLED_SPI {
                 _marker: PhantomData,
             },
             SDRAM: SDRAM {

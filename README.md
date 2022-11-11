@@ -68,6 +68,8 @@ Enable environment with:
 
     brew uninstall gtkwave
 
+    pip uninstall -y -r <(pip freeze)
+
     pyenv uninstall pypy3.9-7.3.9/envs/hello-amaranth
     pyenv uninstall pypy3.9-7.3.9
 
