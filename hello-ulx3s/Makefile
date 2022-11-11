@@ -8,6 +8,12 @@ PYTHON := python
 blinky: blinky.py
 	$(ENVIRONMENT) && $(PYTHON) $<
 
+blinky_pll: blinky_pll.py
+	$(ENVIRONMENT) && $(PYTHON) $<
+
+pmod: pmod.py
+	$(ENVIRONMENT) && $(PYTHON) $<
+
 picocom:
 	picocom --imap lfcrlf -b 115200 $(UART)
 
