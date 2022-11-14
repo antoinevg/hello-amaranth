@@ -5,6 +5,7 @@ datasheets/
 hello-icestick/build/
 hello-icestick/*.v
 hello-icestick/*.vcd
+hello-lambdasoc/build/
 hello-minerva/build/
 hello-ulx3s/build/
 

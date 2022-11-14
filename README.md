@@ -26,6 +26,12 @@
 
     pip install --upgrade 'amaranth[builtin-yosys]'
 
+    # prefer
+    git clone https://github.com/amaranth-lang/amaranth.git amaranth.git
+    cd amaranth.git
+    python setup.py install
+
+
 ### Amaranth Board Definitions
 
     cd toolchain/
