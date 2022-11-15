@@ -242,20 +242,3 @@ class MinervaSoC(CPUSoC, Elaboratable):
 
     def build(self, build_dir, name=None, do_build=True, do_init=False):
         super().build(build_dir=build_dir, name=name, do_build=do_build, do_init=do_init)
-        print("memory_map:")
-        for peripheral, (start, stop, granularity) in self.memory_map.windows():
-            print("    {:s}\tstart: {:08x}\tstop: {:08x}\tstep: {:01x}"
-                  .format(peripheral.name, start, stop, granularity))
-            resources = peripheral.all_resources()
-            for register in resources:
-                register_name = "_".join(register.name)
-                print("        {:s}\tstart: {:08x}\tend: {:08x}\twidth: {:01x}"
-                      .format(register_name, register.start, register.end, register.width))
-                print("          ", "|".join(str(register.resource).split(" ")))
-                #fields = ""
-                #for field in register.resource:
-                #    fields += "{:s}".format(str(field))
-                #print(fields)
-
-    def build_svd(self, platform):
-        pass

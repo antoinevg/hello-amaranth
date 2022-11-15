@@ -88,12 +88,15 @@ if __name__ == "__main__":
         print("Fixing build, creating output directory: ", thirdparty)
         os.makedirs(thirdparty)
 
+    print("Generating svd for SoC: lambdasoc.svd")
+    import svd
+    svd.build(top.soc)
+
+    import sys
+    sys.exit(0)
+
     print("Building bios")
     top.soc.build(name="soc", build_dir=build_dir, do_init=True)
-    top.soc.build_svd(platform)
-
-    #import sys
-    #sys.exit(0)
 
     print("Building soc")
     platform.build(top, do_program=False)
