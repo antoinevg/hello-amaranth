@@ -56,7 +56,7 @@ class Pmod(Elaboratable):
 
         return m
 
-# - build: icestick -----------------------------------------------------------
+# - build: ulx3s --------------------------------------------------------------
 
 from amaranth_boards.ulx3s import *
 

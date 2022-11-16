@@ -144,7 +144,7 @@ class BlinkyPll(Elaboratable):
 
         return m
 
-# - build: icestick -----------------------------------------------------------
+# - build: ulx3s --------------------------------------------------------------
 
 import amaranth_boards.ulx3s as _ulx3s
 
