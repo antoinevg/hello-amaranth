@@ -15,7 +15,7 @@ class Clockworks(Elaboratable):
         m = Module()
 
         # registers
-        self.slow_clk = Signal(self.slow + 1)
+        self.slow_clk = Signal(unsigned(self.slow + 1))
 
         # sync
         m.d.sync += self.slow_clk.eq(self.slow_clk + 1)
@@ -37,35 +37,10 @@ class SoC(Elaboratable):
         self.clk_in = Signal()
         self.rst_in = Signal()
 
-        self.leds_out = Signal(8)
+        self.leds_out = Signal(unsigned(4))
 
         self.rxd_in = Signal()
         self.txd_out = Signal()
-
-        instructions = [
-            0b00000,
-            0b00001,
-            0b00010,
-            0b00100,
-            0b01000,
-            0b10000,
-            0b10001,
-            0b10010,
-            0b10100,
-            0b11000,
-            0b11001,
-            0b11010,
-            0b11100,
-            0b11101,
-            0b11110,
-            0b11111,
-            0b11110,
-            0b11100,
-            0b11000,
-            0b10000,
-            0b00000,
-        ]
-        self.mem = [Const(instruction) for instruction in instructions]
 
     def elaborate(self, platform):
         m = Module()
@@ -75,14 +50,14 @@ class SoC(Elaboratable):
         m.d.comb += ClockSignal("clk_in").eq(self.clk_in)
 
         # registers
-        self.pc = Signal(range(len(self.mem)))
+        self.count = Signal(unsigned(4))
 
         # sync
-        for n, instruction in enumerate(self.mem):
-            with m.If(self.pc == n):
-                m.d.clk_in += self.leds_out.eq(instruction)
+        m.d.clk_in += self.count.eq(self.count + 1)
 
-        m.d.clk_in += self.pc.eq(self.pc + 1)
+        # comb
+        m.d.comb += self.leds_out.eq(self.count)
+        m.d.comb += self.txd_out.eq(1)
 
         return m
 
@@ -95,9 +70,9 @@ class SoC(Elaboratable):
 class Top(Elaboratable):
     def __init__(self, platform):
         if platform is not None:
-            self.leds = Cat(platform.request("led", i) for i in range(8))
+            self.leds = Cat(platform.request("led", i) for i in range(4))
         else:
-            self.leds = Signal(8)
+            self.leds = Signal(unsigned(4))
 
         if platform is not None:
             self.clockworks = Clockworks(21)
