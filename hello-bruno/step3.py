@@ -79,15 +79,8 @@ class SoC(Elaboratable):
         self.pc = Signal(range(mem_size), reset=mem_size)
 
         # sync
-        instruction = self.mem[self.pc]
-        m.d.clk_in += self.leds_out.eq(instruction)
-
-        with m.If((self.rst_in) | (self.pc == mem_size)):
-             m.d.clk_in += self.pc.eq(0)
-        with m.Else():
-            m.d.clk_in += self.pc.eq(self.pc + 1)
-
-        #m.d.clk_in += self.pc.eq(Mux((self.rst_in) | (self.pc == mem_size), 0, self.pc + 1))
+        m.d.clk_in += self.pc.eq(Mux((self.rst_in) | (self.pc == mem_size), 0, self.pc + 1))
+        m.d.clk_in += self.leds_out.eq(self.mem[self.pc])
 
         return m
 

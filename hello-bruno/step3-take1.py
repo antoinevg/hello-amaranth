@@ -49,23 +49,23 @@ class SoC(Elaboratable):
             0b00100,
             0b01000,
             0b10000,
-            0b01000,
-            0b00100,
-            0b00010,
-            0b00001,
-            0b00000,
-            0b00011,
-            0b00111,
-            0b01111,
+            0b10001,
+            0b10010,
+            0b10100,
+            0b11000,
+            0b11001,
+            0b11010,
+            0b11100,
+            0b11101,
+            0b11110,
             0b11111,
             0b11110,
             0b11100,
             0b11000,
             0b10000,
             0b00000,
-            0b11111,
         ]
-        self.mem = Array([Const(instruction) for instruction in instructions])
+        self.mem = [Const(instruction) for instruction in instructions]
 
     def elaborate(self, platform):
         m = Module()
@@ -75,19 +75,13 @@ class SoC(Elaboratable):
         m.d.comb += ClockSignal("clk_in").eq(self.clk_in)
 
         # registers
-        mem_size = len(self.mem)
-        self.pc = Signal(range(mem_size), reset=mem_size)
+        self.pc = Signal(range(len(self.mem)))
 
         # sync
-        instruction = self.mem[self.pc]
-        m.d.clk_in += self.leds_out.eq(instruction)
-
-        with m.If((self.rst_in) | (self.pc == mem_size)):
-             m.d.clk_in += self.pc.eq(0)
-        with m.Else():
-            m.d.clk_in += self.pc.eq(self.pc + 1)
-
-        #m.d.clk_in += self.pc.eq(Mux((self.rst_in) | (self.pc == mem_size), 0, self.pc + 1))
+        for n, instruction in enumerate(self.mem):
+            with m.If(self.pc == n):
+                m.d.clk_in += self.leds_out.eq(instruction)
+        m.d.clk_in += self.pc.eq(self.pc + 1)
 
         return m
 
@@ -101,10 +95,8 @@ class Top(Elaboratable):
     def __init__(self, platform):
         if platform is not None:
             self.leds = Cat(platform.request("led", i) for i in range(8))
-            self.button_pwr = platform.request("button_pwr", 0)
         else:
             self.leds = Signal(8)
-            self.button_pwr = Signal()
 
         if platform is not None:
             self.clockworks = Clockworks(21)
@@ -124,7 +116,6 @@ class Top(Elaboratable):
         # connectors
         m.d.comb += [
             self.soc.clk_in.eq(self.clockworks.clk_out),
-            self.soc.rst_in.eq(self.button_pwr),
             self.leds.eq(self.soc.leds_out)
         ]
 
