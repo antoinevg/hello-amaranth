@@ -20,6 +20,9 @@ step2: step2.py
 picocom:
 	picocom --imap lfcrlf -b 115200 $(UART)
 
+counter: counter.py
+	$(ENVIRONMENT) && $(PYTHON) $<
+
 test:
 	$(ENVIRONMENT) && $(PYTHON) -m amaranth_boards.ulx3s 85F
 
