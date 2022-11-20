@@ -7,14 +7,24 @@ from xml.dom import minidom
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element, SubElement, Comment, tostring
 
+from os import path
+
+
 # Generate a svd file for the given MinervaSoC
-def build(soc: lambdasoc.soc.cpu.CPUSoC, vendor="amaranth-soc", name="soc", description=None):
+def build(soc: lambdasoc.soc.cpu.CPUSoC, vendor="amaranth-soc", name="soc", build_dir="build/", description=None):
     device = _build_section_device(soc, vendor, name, description)
+
+    # <peripherals />
     peripherals = SubElement(device, "peripherals")
+
+    # no resources wut?
+    #print("resources: ", soc.memory_map.resources())
+    #for resource, resource_name, (start, stop) in soc.memory_map.resources():
+    #    print(resource_name)
 
     window: amaranth_soc.memory.MemoryMap
     for window, (start, stop, ratio) in soc.memory_map.windows():
-        if window.name in ["bootrom", "sram"]:
+        if window.name not in ["uart", "timer"]:
             continue
 
         peripheral = _build_section_peripheral(peripherals, window, start, stop, ratio)
@@ -39,6 +49,27 @@ def build(soc: lambdasoc.soc.cpu.CPUSoC, vendor="amaranth-soc", name="soc", desc
             # TODO can we go lower?
             field = _build_section_field(fields, resource_info)
 
+    # <vendorExtensions />
+    vendorExtensions = SubElement(device, "vendorExtensions")
+
+    memoryRegions = SubElement(vendorExtensions, "memoryRegions")
+
+    window: amaranth_soc.memory.MemoryMap
+    for window, (start, stop, ratio) in soc.memory_map.windows():
+        if window.name not in ["bootrom", "sram", "scratchpad"]:
+            continue
+
+        memoryRegion = SubElement(memoryRegions, "memoryRegion")
+        el = SubElement(memoryRegion, "name")
+        el.text = window.name.upper()
+        el = SubElement(memoryRegion, "baseAddress")
+        el.text = "0x{:08x}".format(start)
+        el = SubElement(memoryRegion, "size")
+        el.text = "0x{:08x}".format(stop - start)
+
+    constants = SubElement(vendorExtensions, "constants")  # TODO
+
+
     # dump
     print("\n")
     output = ElementTree.tostring(device, 'utf-8')
@@ -46,7 +77,7 @@ def build(soc: lambdasoc.soc.cpu.CPUSoC, vendor="amaranth-soc", name="soc", desc
     #output = output.toprettyxml(indent="  ")
     output = output.toprettyxml(indent="  ", encoding="utf-8")
     #print(output)
-    with open("lambdasoc.svd", "w") as f:
+    with open(path.join(build_dir, name + ".svd"), "w") as f:
         f.write(str(output.decode("utf-8")))
         f.close()
 
@@ -124,6 +155,6 @@ def _build_section_field(fields: Element, resource_info: amaranth_soc.memory.Res
     el = SubElement(field, "description")
     el.text = "TODO field.description"
     el = SubElement(field, "bitRange")
-    el.text = "[0:31]" # TODO
+    el.text = "[31:0]" # TODO
 
     return field

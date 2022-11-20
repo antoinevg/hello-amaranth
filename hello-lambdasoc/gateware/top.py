@@ -83,14 +83,14 @@ if __name__ == "__main__":
     build_dir = os.path.join("build", 'soc')
 
     # TODO fix build
-    thirdparty = os.path.join(build_dir, "lambdasoc.soc.cpu/bios/3rdparty/litex")
-    if not os.path.exists(thirdparty):
-        print("Fixing build, creating output directory: ", thirdparty)
-        os.makedirs(thirdparty)
+    #thirdparty = os.path.join(build_dir, "lambdasoc.soc.cpu/bios/3rdparty/litex")
+    #if not os.path.exists(thirdparty):
+    #    print("Fixing build, creating output directory: ", thirdparty)
+    #    os.makedirs(thirdparty)
 
-    print("Generating svd for SoC: lambdasoc.svd")
+    print("Generating svd for SoC: firmware/minerva-pac/svd/minerva.svd")
     import svd
-    svd.build(top.soc)
+    svd.build(top.soc, name="minerva", build_dir="firmware/minerva-pac/svd/")
 
     import sys
     sys.exit(0)
