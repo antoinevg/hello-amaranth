@@ -26,6 +26,14 @@ top:
 program:
 	$(ENVIRONMENT) && openFPGALoader --board ulx3s build/top.bit
 
+flash_TODO:
+	 echo -e "\nserialboot" | script -q /dev/null \
+				"flterm --speed $(BAUDRATE) --kernel $< --kernel-addr $(shell ./$(SOC) --get-fw-address) $(SERIALPORT)"
+
+flash:
+	 lxterm --kernel ./blinky.bin --kernel-adr 0x00008000 --speed 115200 /dev/cu.usbserial-D00137
+
+
 picocom:
 	picocom --imap lfcrlf -b 115200 $(UART)
 

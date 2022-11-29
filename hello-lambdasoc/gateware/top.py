@@ -64,10 +64,10 @@ class Top(Elaboratable):
 
         return m
 
-    def build(self, name=None, build_dir="build"):
-        print("Building BIOS")
-        self.soc.build(name=name, build_dir=build_dir)
-        print("Built BIOS")
+    #def build(self, name=None, build_dir="build"):
+    #    print("Building BIOS")
+    #    self.soc.build(name=name, build_dir=build_dir)
+    #    print("Built BIOS")
 
 
 # - main ----------------------------------------------------------------------
@@ -83,22 +83,22 @@ if __name__ == "__main__":
     build_dir = os.path.join("build", 'soc')
 
     # TODO fix build
-    #thirdparty = os.path.join(build_dir, "lambdasoc.soc.cpu/bios/3rdparty/litex")
-    #if not os.path.exists(thirdparty):
-    #    print("Fixing build, creating output directory: ", thirdparty)
-    #    os.makedirs(thirdparty)
+    thirdparty = os.path.join(build_dir, "lambdasoc.soc.cpu/bios/3rdparty/litex")
+    if not os.path.exists(thirdparty):
+        print("Fixing build, creating output directory: ", thirdparty)
+        os.makedirs(thirdparty)
 
-    print("Generating svd for SoC: firmware/minerva-pac/svd/minerva.svd")
-    import svd
-    svd.build(top.soc, name="minerva", build_dir="firmware/minerva-pac/svd/")
+    #print("Generating svd for SoC: firmware/minerva-pac/svd/minerva.svd")
+    #import svd
+    #svd.build(top.soc, name="minerva", build_dir="firmware/minerva-pac/svd/")
 
-    import sys
-    sys.exit(0)
+    #import sys
+    #sys.exit(0)
 
     print("Building bios")
     top.soc.build(name="soc", build_dir=build_dir, do_init=True)
 
     print("Building soc")
-    platform.build(top, do_program=False)
+    platform.build(top, do_program=True)
 
     print("Build completed. Use 'make program' to load bitsream to device.")
