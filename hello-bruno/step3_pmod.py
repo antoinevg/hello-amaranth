@@ -78,7 +78,7 @@ class SoC(Elaboratable):
         m.d.clk_in += self.leds_out.eq(instruction)
 
         with m.If((self.rst_in) | (self.pc == mem_size)):
-             m.d.clk_in += self.pc.eq(0)
+            m.d.clk_in += self.pc.eq(0)
         with m.Else():
             m.d.clk_in += self.pc.eq(self.pc + 1)
 

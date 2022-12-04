@@ -11,10 +11,16 @@ blinky: blinky.py
 top: top.py
 	$(ENVIRONMENT) && $(PYTHON) $<
 
+step2: step2.py
+	$(ENVIRONMENT) && $(PYTHON) $<
+
 step3: step3.py
 	$(ENVIRONMENT) && $(PYTHON) $<
 
-step2: step2.py
+step3_pmod: step3_pmod.py
+	$(ENVIRONMENT) && $(PYTHON) $<
+
+step4: step4.py
 	$(ENVIRONMENT) && $(PYTHON) $<
 
 picocom:
