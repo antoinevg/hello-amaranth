@@ -23,6 +23,9 @@ step3_pmod: step3_pmod.py
 step4: step4.py
 	$(ENVIRONMENT) && $(PYTHON) $<
 
+step5: step5.py
+	$(ENVIRONMENT) && $(PYTHON) $<
+
 picocom:
 	picocom --imap lfcrlf -b 115200 $(UART)
 
