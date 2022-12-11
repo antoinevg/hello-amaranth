@@ -1,5 +1,7 @@
 .python-version
 
+build/
+
 datasheets/
 
 hello-icestick/build/
@@ -18,3 +20,5 @@ target/
 **/*.rs.bk
 Cargo.lock
 hello-femtorv/*.bin
+
+upstream/
