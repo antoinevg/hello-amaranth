@@ -29,6 +29,9 @@ step5: step5.py
 step6: step6.py
 	$(ENVIRONMENT) && $(PYTHON) $<
 
+step7: step7.py
+	$(ENVIRONMENT) && $(PYTHON) $<
+
 picocom:
 	picocom --imap lfcrlf -b 115200 $(UART)
 

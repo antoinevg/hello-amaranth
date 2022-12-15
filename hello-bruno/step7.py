@@ -3,6 +3,8 @@ from amaranth import *
 from enum import Enum, unique
 from typing import List
 
+from asm import assemble
+
 
 # - ISA -----------------------------------------------------------------------
 
@@ -84,48 +86,36 @@ class SoC(Elaboratable):
         self._instr = Signal(32, reset=0b0000000_00000_00000_000_00000_0110011)
 
         # memory
-        self._MEM = Array([Const(instruction) for instruction in [
-            # add x1, x0, x0
-            #           rs2   rs1 add    rd  ALUREG  (OP)
-            0b0000000_00000_00000_000_00001_0110011,
-            # addi x1, x1, 1
-            #          imm   rs1 add    rd  ALUIMM   (OP_IMM)
-            0b000000000001_00001_000_00001_0010011,
-            # addi x1, x1, 1
-            #          imm   rs1 add    rd  ALUIMM
-            0b000000000001_00001_000_00001_0010011,
-            # addi x1, x1, 1
-            #          imm   rs1 add    rd  ALUIMM
-            0b000000000001_00001_000_00001_0010011,
-            # addi x1, x1, 1
-            #          imm   rs1 add    rd  ALUIMM
-            0b000000000001_00001_000_00001_0010011,
-            # add x2, x1, x0
-            #           rs2   rs1 add    rd  ALUREG
-            0b0000000_00000_00001_000_00010_0110011,
-            # add x2, x1, x0
-            #           rs2   rs1 add    rd  ALUREG
-            0b0000000_00010_00001_000_00011_0110011,
-            # srli x3, x3, 3
-            #         shamt   rs1  sr    rd  ALUIMM
-            0b0000000_00011_00011_101_00011_0010011,
-            # slli x3, x3, 31
-            #         shamt   rs1  sl    rd  ALUIMM
-            0b0000000_11111_00011_001_00011_0010011,
-            # srai x3, x3, 5
-            #         shamt   rs1  sr   rd   ALUIMM
-            0b0100000_00101_00011_101_00011_0010011,
-            # srli x1, x3, 26
-            #         shamt   rs1  sr    rd  ALUIMM
-            0b0000000_11010_00011_101_00001_0010011,
-            # ebreak
-            #                               SYSTEM
-            0b000000000001_00000_000_00000_1110011,
-        ]])
-        self._MEM_SIZE = len(self._MEM)
+        asm = """
+            ADD   x0 x0 x0
+            ADD   x1 x0 x0
+            ADDI  x1 x1 1
+            ADDI  x1 x1 1
+            ADDI  x1 x1 1
+            ADDI  x1 x1 1
+            ADD   x2 x1 x0
+            ADD   x3 x1 x2
+            SRLIW x3 x3 3
+            SLLIW x3 x3 31
+            SRAI  x3 x3 5
+            SRLIW x1 x3 26
+            EBREAK x0 x0 0
+            #TODO  ^^ ^^ ^
+        """.strip()
+
+        instructions = assemble(asm)
+        #asm = asm.strip().split("\n")
+        #asm = [line.strip() for line in asm]
+        #for i, instruction in enumerate(instructions):
+        #    bs = "{0:032b}".format(instruction)
+        #    print(asm[i])
+        #    print(bs)
+
+        # TODO https://github.com/BrunoLevy/learn-fpga/blob/9154327d2eb34f548c8d39949213fda892418215/FemtoRV/TUTORIALS/FROM_BLINKER_TO_RISCV/step7.v#L25
+        self._MEM = Array([Const(instruction) for instruction in instructions])
 
         # program counter
-        self._PC = Signal(range(self._MEM_SIZE), reset=0)
+        self._PC = Signal(32, reset=0)
 
         # Register Bank
         self._RegisterBank = Array([Signal(32) for _ in range(32)])
@@ -314,7 +304,8 @@ class SoC(Elaboratable):
 
             with m.Switch(state):
                 with m.Case(State.FETCH_INSTR):
-                    m.d.clk_in += instr.eq(self._MEM[self._PC])
+                    address = self._PC[2:32]
+                    m.d.clk_in += instr.eq(self._MEM[address])
                     m.d.clk_in += state.eq(State.FETCH_REGS)
                 with m.Case(State.FETCH_REGS):
                     m.d.clk_in += self._rs1.eq(self._RegisterBank[rs1Id])
@@ -322,7 +313,8 @@ class SoC(Elaboratable):
                     m.d.clk_in += state.eq(State.EXECUTE)
                 with m.Case(State.EXECUTE):
                     with m.If(isSYSTEM == C(0)):
-                        m.d.clk_in += self._PC.eq(self._PC + 1)
+                        address = self._PC + 4
+                        m.d.clk_in += self._PC.eq(address)
                     m.d.clk_in += state.eq(State.FETCH_INSTR)
 
         # - diagnostics --
@@ -389,7 +381,7 @@ class Top(Elaboratable):
 
 # see: https://github.com/RobertBaruch/amaranth-tutorial/blob/main/7_simulating.md
 
-if True:
+if False:
     from amaranth.sim import Simulator
 
     dut = Top(clock_multiplier=1)
@@ -402,7 +394,7 @@ if True:
     sim.add_clock(1e-6, domain="sync")
     sim.add_sync_process(bench, domain="sync")
 
-    with sim.write_vcd("step6.vcd", "step6.gtkw", traces=dut.ports()):
+    with sim.write_vcd("step7.vcd", "step7.gtkw", traces=dut.ports()):
         sim.run_until(150e-6, run_passive=True) # 20s
 
     import sys
