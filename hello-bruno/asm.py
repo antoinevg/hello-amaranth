@@ -81,58 +81,41 @@ if __name__ == "__main__":
      output_a = cnv.convert_ret("step7.s")
      #print(output_a)
 
-     _asm = """
-         addi s0 x0 10
-         addi s1 x0 10
-
-         beq s1 s0 loop
-
-         loop:
-             addi s1 s0 -32
-     """
-
-     asm = """
-         ADD  x0 x0 x0
-         ADD  x1 x0 x0
-         ADDI x1 x1 1
-         ADDI x1 x1 1
-         ADDI x1 x1 1
-         ADDI x1 x1 1
-         ADD  x2 x1 x0
-         ADD  x3 x1 x2
+     asm_1 = """
+         ADD   x0 x0 x0
+         ADD   x1 x0 x0
+         ADDI  x1 x1 1
+         ADDI  x1 x1 1
+         ADDI  x1 x1 1
+         ADDI  x1 x1 1
+         ADD   x2 x1 x0
+         ADD   x3 x1 x2
          SRLIW x3 x3 3
          SLLIW x3 x3 31
-         SRAI x3 x3 5
+         SRAI  x3 x3 5
          SRLIW x1 x3 26
-         EBREAK
-     """#.strip()
+         EBREAK x0 x0 0
+         #TODO  ^^ ^^ ^
+     """.strip()
 
-     # write asm to a temporary file
-     with open("/tmp/asm.s", "w") as f:
-         f.write(asm.lower())
-
-     # assemble it and get the output as an array of nibbles
-     output_b = cnv.convert_ret("/tmp/asm.s")
-     #print("cnv.convert_ret:", output_b)
-
-     # assemble it and write the output to a binary file: ./asm/bin/asm.bin
-     #cnv.convert("/tmp/asm.s")
+     asm = """
+         ADD    x1, x0, x0
+     loop:
+         ADDI   x1, x1, 1
+         JAL    x0, loop
+         EBREAK x0, x0, 0
+         #TODO  ^^ ^^ ^
+     """.strip()
 
      instructions = assemble(asm)
-     #print("assemble: ", output_c)
+     print("assembled: ", instructions)
 
+     # dump it
      asm = asm.strip().split("\n")
      asm = [line.strip() for line in asm]
-
      for i, instruction in enumerate(instructions):
-         bs = "{0:032b}".format(instruction)
-         hs = "{:08x}".format(instruction)
-         ns = "{:10d}".format(instruction)
-
-         if bs != output_a[i]:
-             print("Error: line {} in output_a does not match\n    {}\n    {}".format(i, line, output_a[i]))
-         if bs != output_b[i]:
-             print("Error: line {} in output_b does not match\n    {}\n    {}".format(i, line, output_b[i]))
-
+         hs = "0x{0:08x}".format(instruction)
+         bs = "0b{0:032b}".format(instruction)
          print(asm[i])
-         print("{}  0x{}  {}".format(bs, hs, ns))
+         print(hs)
+         #print(bs)
