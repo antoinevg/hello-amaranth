@@ -86,24 +86,23 @@ class SoC(Elaboratable):
         self._instr = Signal(32, reset=0b0000000_00000_00000_000_00000_0110011)
 
         # memory
+        # instructions = [
+        #     0x000000b3, #     ADD     ra,zero,zero
+        #                 # loop:
+        #     0x00108093, #     ADDI    ra,ra,1
+        #     0xffdff06f, #     j       4 <loop>
+        #     0x00100073, #     EBREAK
+        # ]
+
         asm = """
             ADD    x1, x0, x0
         loop:
             ADDI   x1, x1, 1
             JAL    x0, loop
-            EBREAK x0, x0, 0
-            #TODO  ^^ ^^ ^
+        # EBREAK
         """
-
-        # TODO replace assembler
-        #instructions = assemble(asm)
-        instructions = [
-                        # loop:
-            0x000000b3, #     add     ra,zero,zero
-            0x00108093, #     addi    ra,ra,1
-            0xffdff06f, #     j       4 <loop>
-            0x00100073, #     ebreak
-        ]
+        instructions = assemble(asm)
+        instructions.append(0x00100073) # EBREAK
 
         self._MEM = Array([Const(instruction) for instruction in instructions])
 

@@ -15,3 +15,9 @@ Exploring Bruno Levy's [From Blinker to RISC_V](https://github.com/BrunoLevy/lea
 
 * [GuzTech/misato](https://github.com/GuzTech/misato)
 * [minerva-cpu/minerva](https://github.com/minerva-cpu/minerva)
+
+
+## Mini Assemblers
+
+* [RISC-Assembler](https://github.com/DFriend01/RISC-Assembler)
+* [RISCV-RV32I-Assembler](https://github.com/metastableB/RISCV-RV32I-Assembler)
